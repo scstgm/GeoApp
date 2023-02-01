@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-const RegionsScreen = ({ navigation, route }) => {
+const RegionsScreen = ({ navigation }) => {
   const [regions, setRegions] = useState([]);
 
   useEffect(() => {

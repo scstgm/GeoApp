@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { View, Image, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 
 /* https://numbrojs.com/format.html
 for formatting data (like population and area) because "toLocaleString()" is 
@@ -10,8 +17,8 @@ let numbro = require("numbro");
 //for converting the UTC timezone to local time of the selected country
 import moment from "moment";
 
-const CountryScreen = ({ route }) => {
-  const { flag, name, cca2, capital, population, area, timezone, neighbors } =
+const CountryScreen = ({ navigation, route }) => {
+  const { flag, name, cca2, capital, population, area, timezone, borders } =
     route.params;
   const [currencyValue, setCurrencyValue] = useState();
 
@@ -30,7 +37,6 @@ const CountryScreen = ({ route }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [timezone]); */
-
   return (
     <View style={styles.container}>
       <Image source={flag} style={styles.flag} />
@@ -47,7 +53,26 @@ const CountryScreen = ({ route }) => {
           {/* Area: {area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} km² */}
           Area: {numbro(area).format({ thousandSeparated: true })} km²
         </Text>
-        <Text style={styles.text}>Local time: {timezone}</Text>
+        <Text style={styles.text}>Local time: {`${timezone}`}</Text>
+
+        <Text style={styles.text}>Neighbors: </Text>
+
+        <FlatList
+          contentContainerStyle={styles.bordersListContainer}
+          data={borders}
+          numColumns={4}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("CountryScreen")}
+            >
+              <View style={styles.bordersListItems}>
+                {/* <Image source={item.flag} style={styles.flag} /> */}
+                <Text style={styles.text}>{item}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       </View>
     </View>
   );
@@ -72,7 +97,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  neighborsContainer: {},
+  bordersListContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bordersListItems: {
+    backgroundColor: "green",
+  },
 });
 
 export default CountryScreen;

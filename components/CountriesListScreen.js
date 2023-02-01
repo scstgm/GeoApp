@@ -14,6 +14,7 @@ const CountriesListScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     //for some reason it doesn't work with v3.1 but with v2 it does?!
+    //in the API's documentation the endpoints are the same for each version
     fetch(`https://restcountries.com/v2/region/${region}`)
       .then((res) => {
         if (res.ok) {
@@ -45,6 +46,7 @@ const CountriesListScreen = ({ navigation, route }) => {
                 population: item.population,
                 area: item.area,
                 timezone: item.timezones,
+                borders: item.borders,
               })
             }
           >
