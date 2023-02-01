@@ -37,7 +37,7 @@ const CountriesListScreen = ({ navigation, route }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("Country", {
+              navigation.navigate("CountryScreen", {
                 flag: { uri: item.flags.png },
                 name: item.name,
                 cca2: item.alpha3Code,
