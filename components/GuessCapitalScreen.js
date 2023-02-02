@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 const GuessCapitalScreen = ({ navigation, route }) => {
@@ -6,7 +6,8 @@ const GuessCapitalScreen = ({ navigation, route }) => {
   const [randomCountry, setRandomCountry] = useState(
     countries[Math.floor(Math.random() * countries.length)]
   );
-  const randomIndex = Math.floor(Math.random() * countries.length);
+  const [score, setScore] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
 
   const correctOption = randomCountry.capital;
   const options = [correctOption];
@@ -24,7 +25,8 @@ const GuessCapitalScreen = ({ navigation, route }) => {
 
   const handlePress = (selectedOption) => {
     if (selectedOption === correctOption) {
-      Alert.alert("Correct!", "You have selected the right answer.", [
+      setScore((prevScore) => prevScore + 1);
+      Alert.alert("Right answer!", `Your current score is: ${score}`, [
         {
           text: "OK",
           onPress: () => {
@@ -36,7 +38,8 @@ const GuessCapitalScreen = ({ navigation, route }) => {
         },
       ]);
     } else {
-      Alert.alert("Wrong!", "You have selected the wrong answer.", [
+      setScore((prevScore) => prevScore - 1);
+      Alert.alert("Wrong answer!", `Your current score is: ${score}`, [
         {
           text: "OK",
           onPress: () => {
@@ -48,22 +51,33 @@ const GuessCapitalScreen = ({ navigation, route }) => {
         },
       ]);
     }
+
+    if (score === 10 || incorrectAnswers === 3) {
+      navigation.navigate("EndGameStatsScreen", {
+        score,
+        incorrectAnswers,
+      });
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.question}>
-        What is the capital of {randomCountry.name.common}?
-      </Text>
-      {options.map((option, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.option}
-          onPress={() => handlePress(option)}
-        >
-          <Text style={styles.optionText}>{option}</Text>
-        </TouchableOpacity>
-      ))}
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>
+          What is the capital of {randomCountry.name.common}?
+        </Text>
+      </View>
+      <View style={styles.guessOptionsContainer}>
+        {options.map((option, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.guessOption}
+            onPress={() => handlePress(option)}
+          >
+            <Text style={styles.optionText}>{option}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
@@ -71,22 +85,41 @@ const GuessCapitalScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "azure",
+  },
+  questionContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  question: {
     fontSize: 20,
-    marginBottom: 20,
-  },
-  option: {
-    backgroundColor: "lightblue",
+    marginHorizontal: 20,
     padding: 10,
-    marginVertical: 10,
-    width: 200,
+    width: "90%",
+    marginTop: 120,
+  },
+  guessOptionsContainer: {
+    flex: 4,
+    justifyContent: "center",
     alignItems: "center",
+    marginHorizontal: 20,
+    width: "90%",
+    marginBottom: 120,
+  },
+  guessOption: {
+    backgroundColor: "lightblue",
+    padding: 12,
+    marginVertical: 12,
+    width: "70%",
+    alignItems: "center",
+    borderRadius: 20,
+  },
+  questionText: {
+    fontSize: 20,
+    textAlign: "center",
   },
   optionText: {
-    fontSize: 16,
+    fontSize: 18,
+    textAlign: "center",
   },
 });
 

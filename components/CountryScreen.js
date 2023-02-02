@@ -18,9 +18,11 @@ const CountryScreen = ({ navigation, route }) => {
   const { flag, name, cca2, capital, population, area, timezone, borders } =
     route.params;
 
+  const [time, setTime] = useState();
+
   const [currencyValue, setCurrencyValue] = useState();
 
-  //converting the UTC offset to local time ?
+  //converting the UTC offset to local time?
 
   //timezonedb API call
   //http://api.timezonedb.com/v2.1/get-time-zone?key=U72HT3WE7VK2&format=json&by=zone&zone=${selectedCountryTimezone}
@@ -58,6 +60,7 @@ const CountryScreen = ({ navigation, route }) => {
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() =>
+                  //currently not functioning
                   navigation.setParams("CountryScreen", {
                     flag,
                     name,
@@ -71,7 +74,7 @@ const CountryScreen = ({ navigation, route }) => {
                 }
               >
                 <View style={styles.bordersListItems}>
-                  {/* <Image source={item.flag} style={styles.flag} /> */}
+                  {/* <Image source={item.flag} /> */}
                   <Text style={styles.bordersListItemsText}>{item}</Text>
                 </View>
               </TouchableOpacity>
