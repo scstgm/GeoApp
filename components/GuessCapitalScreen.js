@@ -1,16 +1,28 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Animated,
+} from "react-native";
 
 const GuessCapitalScreen = ({ navigation, route }) => {
   const { countries } = route.params;
   const [randomCountry, setRandomCountry] = useState(
     countries[Math.floor(Math.random() * countries.length)]
   );
+  const [questionNumber, setQuestionNumber] = useState(1);
+
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
 
   const correctOption = randomCountry.capital;
   const options = [correctOption];
+
+  const [fadeAnim] = useState(new Animated.Value(1));
+  const [backgroundColor, setBackgroundColor] = useState("white");
 
   while (options.length < 4) {
     const randomIndex = Math.floor(Math.random() * countries.length);
@@ -26,49 +38,26 @@ const GuessCapitalScreen = ({ navigation, route }) => {
   const handlePress = (selectedOption) => {
     if (selectedOption === correctOption) {
       setCorrectAnswers((prevScore) => prevScore + 1);
-      Alert.alert(
-        "Right answer!",
-        `The number of correct answers are: ${correctAnswers}`,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              setRandomCountry(
-                countries[Math.floor(Math.random() * countries.length)]
-              );
-              navigation.navigate("GuessCapitalScreen", { countries });
-            },
-          },
-        ]
-      );
+      Alert.alert("Right answer!");
     } else {
       setIncorrectAnswers((prevScore) => prevScore + 1);
-      Alert.alert(
-        "Wrong answer!",
-        `The number of incorrect answers are: ${incorrectAnswers}`,
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              setRandomCountry(
-                countries[Math.floor(Math.random() * countries.length)]
-              );
-              navigation.navigate("GuessCapitalScreen", { countries });
-            },
-          },
-        ]
-      );
+      Alert.alert("Wrong answer!");
     }
-    if (correctAnswers === 10 || incorrectAnswers === 3) {
+
+    if (questionNumber === 10) {
       navigation.navigate("EndGameStatsScreen", {
         correctAnswers,
         incorrectAnswers,
       });
+    } else {
+      setQuestionNumber((prevQuestionNumber) => prevQuestionNumber + 1);
+      setRandomCountry(countries[Math.floor(Math.random() * countries.length)]);
     }
   };
 
   return (
     <View style={styles.container}>
+      <Text>{questionNumber}/10</Text>
       <View style={styles.questionContainer}>
         <Text style={styles.questionText}>
           What is the capital of {randomCountry.name.common}?
