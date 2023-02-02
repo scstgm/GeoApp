@@ -6,7 +6,7 @@ const GuessCapitalScreen = ({ navigation, route }) => {
   const [randomCountry, setRandomCountry] = useState(
     countries[Math.floor(Math.random() * countries.length)]
   );
-  const [score, setScore] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
 
   const correctOption = randomCountry.capital;
@@ -25,36 +25,43 @@ const GuessCapitalScreen = ({ navigation, route }) => {
 
   const handlePress = (selectedOption) => {
     if (selectedOption === correctOption) {
-      setScore((prevScore) => prevScore + 1);
-      Alert.alert("Right answer!", `Your current score is: ${score}`, [
-        {
-          text: "OK",
-          onPress: () => {
-            setRandomCountry(
-              countries[Math.floor(Math.random() * countries.length)]
-            );
-            navigation.navigate("GuessCapitalScreen", { countries });
+      setCorrectAnswers((prevScore) => prevScore + 1);
+      Alert.alert(
+        "Right answer!",
+        `The number of correct answers are: ${correctAnswers}`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              setRandomCountry(
+                countries[Math.floor(Math.random() * countries.length)]
+              );
+              navigation.navigate("GuessCapitalScreen", { countries });
+            },
           },
-        },
-      ]);
+        ]
+      );
     } else {
-      setScore((prevScore) => prevScore - 1);
-      Alert.alert("Wrong answer!", `Your current score is: ${score}`, [
-        {
-          text: "OK",
-          onPress: () => {
-            setRandomCountry(
-              countries[Math.floor(Math.random() * countries.length)]
-            );
-            navigation.navigate("GuessCapitalScreen", { countries });
+      setIncorrectAnswers((prevScore) => prevScore + 1);
+      Alert.alert(
+        "Wrong answer!",
+        `The number of incorrect answers are: ${incorrectAnswers}`,
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              setRandomCountry(
+                countries[Math.floor(Math.random() * countries.length)]
+              );
+              navigation.navigate("GuessCapitalScreen", { countries });
+            },
           },
-        },
-      ]);
+        ]
+      );
     }
-
-    if (score === 10 || incorrectAnswers === 3) {
+    if (correctAnswers === 10 || incorrectAnswers === 3) {
       navigation.navigate("EndGameStatsScreen", {
-        score,
+        correctAnswers,
         incorrectAnswers,
       });
     }

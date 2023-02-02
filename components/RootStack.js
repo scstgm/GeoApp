@@ -9,6 +9,7 @@ import GameTypesScreen from "./GameTypesScreen";
 import GuessCapitalScreen from "./GuessCapitalScreen";
 import GuessFlagScreen from "./GuessFlagScreen";
 import GuessNeighborScreen from "./GuessNeighborScreen";
+import EndGameStatsScreen from "./EndGameStatsScreen";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const RootStack = () => {
         name="GuessNeighborScreen"
         component={GuessNeighborScreen}
       />
+      <Stack.Screen name="EndGameStatsScreen" component={EndGameStatsScreen} />
     </Stack.Navigator>
   );
 };
