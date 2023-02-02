@@ -2,37 +2,61 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 const GuessCapitalScreen = ({ navigation, route }) => {
-  const [options, setOptions] = useState([]);
-  const [correctOption, setCorrectOption] = useState("");
+  const { countries } = route.params;
+  const randomIndex = Math.floor(Math.random() * countries.length);
+  const randomCountry = countries[randomIndex];
+  const correctOption = randomCountry.capital;
+  const options = [correctOption];
 
-  useEffect(() => {
-    const { countries } = route.params;
+  while (options.length < 4) {
     const randomIndex = Math.floor(Math.random() * countries.length);
-    const randomCountry = countries[randomIndex];
-    setCorrectOption(randomCountry.capital);
-    const options = [
-      randomCountry.capital,
-      ...countries
-        .filter((country) => country.capital !== randomCountry.capital)
-        .slice(0, 3)
-        .map((country) => country.capital),
-    ];
-    setOptions(options.sort(() => Math.random() - 0.5));
-  }, []);
+    const randomOption = countries[randomIndex].capital;
+
+    if (!options.includes(randomOption)) {
+      options.push(randomOption);
+    }
+  }
+
+  options.sort(() => Math.random() - 0.5);
+
+  const handlePress = (selectedOption) => {
+    if (selectedOption === correctOption) {
+      Alert.alert("Correct!", "You have selected the right answer.", [
+        {
+          text: "OK",
+          onPress: () => {
+            setRandomCountry(
+              countries[Math.floor(Math.random() * countries.length)]
+            );
+            navigation.navigate("QuizGame", { countries });
+          },
+        },
+      ]);
+    } else {
+      Alert.alert("Wrong!", "You have selected the wrong answer.", [
+        {
+          text: "OK",
+          onPress: () => {
+            setRandomCountry(
+              countries[Math.floor(Math.random() * countries.length)]
+            );
+            navigation.navigate("QuizGame", { countries });
+          },
+        },
+      ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.question}>What is the capital of this country?</Text>
-      {options.map((option) => (
+      <Text style={styles.question}>
+        What is the capital of {randomCountry.name.common}?
+      </Text>
+      {options.map((option, index) => (
         <TouchableOpacity
-          key={option}
+          key={index}
           style={styles.option}
-          onPress={() => {
-            navigation.navigate("Result", {
-              correctOption,
-              selectedOption: option,
-            });
-          }}
+          onPress={() => handlePress(option)}
         >
           <Text style={styles.optionText}>{option}</Text>
         </TouchableOpacity>
