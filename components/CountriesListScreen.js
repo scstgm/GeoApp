@@ -13,8 +13,8 @@ const CountriesListScreen = ({ navigation, route }) => {
   const { region } = route.params;
 
   useEffect(() => {
-    //for some reason it doesn't work with v3.1 but with v2 it does?!
-    //in the API's documentation the endpoints are the same for each version
+    /* for some reason it doesn't work with v3.1 but with v2 it does, even 
+    though in the API's documentation this endpoint is the same for each version */
     fetch(`https://restcountries.com/v2/region/${region}`)
       .then((res) => {
         if (res.ok) {

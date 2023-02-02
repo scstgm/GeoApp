@@ -34,12 +34,13 @@ const RegionsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        style={styles.list}
+        contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}
+        style={styles.regionList}
         data={regions}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.regionContainer}
+            style={styles.region}
             onPress={() =>
               navigation.navigate("CountriesListScreen", { region: item })
             }
@@ -58,22 +59,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "lightblue",
   },
-  list: {
-    marginVertical: 100,
-    marginHorizontal: 16,
+  regionList: {
+    marginVertical: 140,
+    marginHorizontal: 18,
   },
-  regionContainer: {
-    flex: 1,
+  region: {
     backgroundColor: "azure",
     borderRadius: 12,
-    padding: 16,
-    marginVertical: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 18,
   },
   regionText: {
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

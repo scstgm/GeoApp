@@ -14,29 +14,20 @@ not supported on Android and because "replace(/\B(?=(\d{3})+(?!\d))/g, ".")"
 is ugly and prone to cause bugs */
 let numbro = require("numbro");
 
-//for converting the UTC timezone to local time of the selected country
-import moment from "moment";
-
 const CountryScreen = ({ navigation, route }) => {
   const { flag, name, cca2, capital, population, area, timezone, borders } =
     route.params;
+
   const [currencyValue, setCurrencyValue] = useState();
 
-  // //converting the UTC timezone to local time
+  //converting the UTC offset to local time ?
 
-  // const localTime = moment
-  //   .utc(timezone)
-  //   .local()
-  //   .format("MMMM Do YYYY, h:mm:ss a");
+  //timezonedb API call
+  //http://api.timezonedb.com/v2.1/get-time-zone?key=U72HT3WE7VK2&format=json&by=zone&zone=${selectedCountryTimezone}
 
+  //currency
   //api.exchangeratesapi.io/v1/latest?access_key=i9sv5EtHHHu6tMuG9itB6FpMdRTceA3S;
 
-  /* useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(moment().tz(timezone).format("h:mm:ss a"));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timezone]); */
   return (
     <View style={styles.container}>
       <Image source={flag} style={styles.flag} />
@@ -53,26 +44,40 @@ const CountryScreen = ({ navigation, route }) => {
           {/* Area: {area.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} km² */}
           Area: {numbro(area).format({ thousandSeparated: true })} km²
         </Text>
-        <Text style={styles.text}>Local time: {`${timezone}`}</Text>
+        <Text style={styles.text}>Time zone: {`${timezone} `}</Text>
 
         <Text style={styles.text}>Neighbors: </Text>
-
-        <FlatList
-          contentContainerStyle={styles.bordersListContainer}
-          data={borders}
-          numColumns={4}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("CountryScreen")}
-            >
-              <View style={styles.bordersListItems}>
-                {/* <Image source={item.flag} style={styles.flag} /> */}
-                <Text style={styles.text}>{item}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+        {typeof borders === "undefined" ? (
+          <Text style={styles.text}>There is none.</Text>
+        ) : (
+          <FlatList
+            contentContainerStyle={styles.bordersListContainer}
+            data={borders}
+            numColumns={4}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.setParams("CountryScreen", {
+                    flag,
+                    name,
+                    cca2,
+                    capital,
+                    population,
+                    area,
+                    timezone,
+                    borders,
+                  })
+                }
+              >
+                <View style={styles.bordersListItems}>
+                  {/* <Image source={item.flag} style={styles.flag} /> */}
+                  <Text style={styles.bordersListItemsText}>{item}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -98,12 +103,15 @@ const styles = StyleSheet.create({
   },
 
   bordersListContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   bordersListItems: {
-    backgroundColor: "green",
+    margin: 4,
+    padding: 10,
+  },
+  bordersListItemsText: {
+    fontSize: 16,
   },
 });
 
