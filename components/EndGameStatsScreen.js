@@ -1,9 +1,19 @@
 import { View, Text, StyleSheet } from "react-native";
 
-const EndGameStatsScreen = () => {
+const EndGameStatsScreen = ({ route }) => {
+  const { correctAnswers, incorrectAnswers } = route.params;
   return (
-    <View>
-      <Text>End game</Text>
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.text}>
+          The number of correct answers: {correctAnswers}
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.text}>
+          The number of incorrect answers: {incorrectAnswers}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -11,7 +21,12 @@ const EndGameStatsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "lightblue",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "azure",
+  },
+  text: {
+    fontSize: 20,
   },
 });
 
