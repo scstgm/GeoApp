@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 const GuessCapitalScreen = ({ navigation, route }) => {
   const { countries } = route.params;
+  const [randomCountry, setRandomCountry] = useState(
+    countries[Math.floor(Math.random() * countries.length)]
+  );
   const randomIndex = Math.floor(Math.random() * countries.length);
-  const randomCountry = countries[randomIndex];
+
   const correctOption = randomCountry.capital;
   const options = [correctOption];
 
@@ -28,7 +31,7 @@ const GuessCapitalScreen = ({ navigation, route }) => {
             setRandomCountry(
               countries[Math.floor(Math.random() * countries.length)]
             );
-            navigation.navigate("QuizGame", { countries });
+            navigation.navigate("GuessCapitalScreen", { countries });
           },
         },
       ]);
@@ -40,7 +43,7 @@ const GuessCapitalScreen = ({ navigation, route }) => {
             setRandomCountry(
               countries[Math.floor(Math.random() * countries.length)]
             );
-            navigation.navigate("QuizGame", { countries });
+            navigation.navigate("GuessCapitalScreen", { countries });
           },
         },
       ]);
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   option: {
-    backgroundColor: "#ddd",
+    backgroundColor: "lightblue",
     padding: 10,
     marginVertical: 10,
     width: 200,
