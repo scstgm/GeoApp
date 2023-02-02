@@ -1,68 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
-const GuessCapitalScreen = () => {
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState({});
+const GuessCapitalScreen = ({ navigation, route }) => {
   const [options, setOptions] = useState([]);
-  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [correctOption, setCorrectOption] = useState("");
 
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
-      .then((res) => res.json())
-      .then((data) => {
-        setQuestions(data);
-        generateQuestion();
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
-  const generateQuestion = () => {
-    if (questions.length === 0) {
-      return;
-    }
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const current = questions[randomIndex];
-    setCurrentQuestion(current);
-    setCorrectAnswer(current.capital);
-
-    const options = [current.capital];
-    let count = 0;
-
-    while (count < 3) {
-      const randomOptionIndex = Math.floor(Math.random() * questions.length);
-      if (options.indexOf(questions[randomOptionIndex].capital) === -1) {
-        options.push(questions[randomOptionIndex].capital);
-        count++;
-      }
-    }
-
+    const { countries } = route.params;
+    const randomIndex = Math.floor(Math.random() * countries.length);
+    const randomCountry = countries[randomIndex];
+    setCorrectOption(randomCountry.capital);
+    const options = [
+      randomCountry.capital,
+      ...countries
+        .filter((country) => country.capital !== randomCountry.capital)
+        .slice(0, 3)
+        .map((country) => country.capital),
+    ];
     setOptions(options.sort(() => Math.random() - 0.5));
-  };
-
-  const checkAnswer = (answer) => {
-    if (answer === correctAnswer) {
-      Alert.alert("Correct");
-      generateQuestion();
-    } else {
-      Alert.alert("Incorrect");
-    }
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
-      {currentQuestion.name ? (
-        <Text style={styles.question}>
-          What is the capital of {currentQuestion.name}?
-        </Text>
-      ) : (
-        <Text style={styles.question}>Loading...</Text>
-      )}
-      {options.map((option, index) => (
+      <Text style={styles.question}>What is the capital of this country?</Text>
+      {options.map((option) => (
         <TouchableOpacity
-          key={index}
+          key={option}
           style={styles.option}
-          onPress={() => checkAnswer(option)}
+          onPress={() => {
+            navigation.navigate("Result", {
+              correctOption,
+              selectedOption: option,
+            });
+          }}
         >
           <Text style={styles.optionText}>{option}</Text>
         </TouchableOpacity>
