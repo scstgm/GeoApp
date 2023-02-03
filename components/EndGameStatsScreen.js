@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const EndGameStatsScreen = ({ route }) => {
-  const { correctAnswers, incorrectAnswers } = route.params;
+const EndGameStatsScreen = ({ navigation, route }) => {
+  const { correctAnswers, incorrectAnswers, countries } = route.params;
   return (
     <View style={styles.container}>
       <View>
@@ -14,6 +14,13 @@ const EndGameStatsScreen = ({ route }) => {
           The number of incorrect answers: {incorrectAnswers}
         </Text>
       </View>
+      {/* it is currently disabled because it needs modification in order to when 
+      pressed to set every value (questioNumber, correctAnswers, incorrectAnswes) back to 0 */}
+      {/* <TouchableOpacity
+        onPress={() => navigation.navigate("GuessCapitalScreen", { countries })}
+      >
+        <Text style={styles.text}>Restart</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -24,9 +31,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "azure",
+    marginHorizontal: 20,
   },
   text: {
     fontSize: 20,
+    textAlign: "center",
+    marginVertical: 10,
   },
 });
 

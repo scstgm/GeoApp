@@ -62,14 +62,7 @@ const CountryScreen = ({ navigation, route }) => {
                 onPress={() =>
                   //currently not functioning
                   navigation.setParams("CountryScreen", {
-                    flag,
-                    name,
-                    cca2,
-                    capital,
-                    population,
-                    area,
-                    timezone,
-                    borders,
+                    cca2: item,
                   })
                 }
               >
